@@ -1,0 +1,11 @@
+{
+    "current_round": "Jelenlegi kör",
+    "choose_rider": "Válassz versenyzőt",
+    "select_card_for_rouler": "Válassz kártyát a Roulernek",
+    "select_card_for_sprinter": "Válassz kártyát a Sprinternek",
+    "second_third_phase": "Mozgás és Lezárás fázis",
+    "add_rouler_fatigue": "Rouler fáradtságkártya hozzáadása",
+    "add_sprinter_fatigue": "Sprinter fáradtságkártya hozzáadása",
+    "finish_round": "Következő kör",
+    "back": "Vissza"
+}
