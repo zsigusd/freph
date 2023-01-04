@@ -1,9 +1,9 @@
-import { computed, toRaw, reactive } from 'vue'
 import { defineStore } from 'pinia'
+import { computed, reactive, toRaw } from 'vue'
 
 export enum RiderStatus {
     READY,
-    IN_USE,
+    DRAWN,
     FINISHED,
 }
 
@@ -112,7 +112,10 @@ export const useDeckStore = defineStore('deck', () => {
         () => state.roulerStatus === RiderStatus.FINISHED && state.sprinterStatus === RiderStatus.FINISHED
     )
     const showRiderSelector = computed(
-        () => state.roulerStatus !== RiderStatus.IN_USE && state.sprinterStatus !== RiderStatus.IN_USE
+        () =>
+            state.roulerStatus !== RiderStatus.DRAWN &&
+            state.sprinterStatus !== RiderStatus.DRAWN &&
+            !(state.roulerStatus === RiderStatus.FINISHED && state.sprinterStatus === RiderStatus.FINISHED)
     )
 
     const prevStates: AppState[] = reactive([])
@@ -122,7 +125,7 @@ export const useDeckStore = defineStore('deck', () => {
         prevStates.push(structuredClone(toRaw(state)))
     }
 
-    function restoreState() {
+    function toPreviousState() {
         const prevState = prevStates.splice(prevStates.length - 1, 1)[0]
         if (prevState) {
             state.roulerDeck = prevState.roulerDeck
@@ -161,7 +164,7 @@ export const useDeckStore = defineStore('deck', () => {
                 })
         }
 
-        state.roulerStatus = RiderStatus.IN_USE
+        state.roulerStatus = RiderStatus.DRAWN
     }
 
     function drawSprinter() {
@@ -188,7 +191,7 @@ export const useDeckStore = defineStore('deck', () => {
                 })
         }
 
-        state.sprinterStatus = RiderStatus.IN_USE
+        state.sprinterStatus = RiderStatus.DRAWN
     }
 
     function selectRouler(card: Card) {
@@ -257,6 +260,6 @@ export const useDeckStore = defineStore('deck', () => {
         addRoulerFatigueCard,
         addSprinterFatigueCard,
         finishRound,
-        restoreState,
+        toPreviousState,
     }
 })
