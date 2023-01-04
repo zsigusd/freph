@@ -11,7 +11,7 @@ const { drawRouler, drawSprinter } = store
 </script>
 
 <template>
-    <div class="flex">
+    <div class="flex w-80 items-center justify-around align-middle">
         <CardItem :disabled="state.sprinterStatus === RiderStatus.FINISHED" @click="drawSprinter">
             <div class="text-8xl">S</div>
             <div class="text-3xl">
