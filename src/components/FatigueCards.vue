@@ -10,7 +10,7 @@ const { addRoulerFatigueCard, addSprinterFatigueCard } = store
 </script>
 
 <template>
-    <div class="my-5 flex">
+    <div class="my-5 flex w-80 items-center justify-around align-middle"">
         <button
             :disabled="state.sprinterFatigueAdded"
             class="mx-5 h-20 w-28 rounded bg-red-500 text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
