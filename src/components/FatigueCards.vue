@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CardItem from '@/components/CardItem.vue'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
 
@@ -11,19 +12,30 @@ const { addRoulerFatigueCard, addSprinterFatigueCard } = store
 
 <template>
     <div class="my-5 flex w-80 items-center justify-around align-middle">
-        <button
+        <CardItem
             :disabled="state.sprinterFatigueAdded"
-            class="mx-5 h-20 w-28 rounded bg-red-500 text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+            class="bg-red-600 hover:bg-red-700 hover:disabled:bg-red-600"
+            :title="$t('add_sprinter_fatigue')"
             @click="addSprinterFatigueCard"
         >
-            {{ $t('add_sprinter_fatigue') }}
-        </button>
-        <button
+            <div class="flex flex-col">
+                <div class="text-4xl">+</div>
+                <div class="text-6xl">S</div>
+                <div class="text-3xl">2</div>
+            </div>
+        </CardItem>
+
+        <CardItem
             :disabled="state.roulerFatigueAdded"
-            class="mx-5 h-20 w-28 rounded bg-red-500 text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+            class="bg-red-600 hover:bg-red-700 hover:disabled:bg-red-600"
+            :title="$t('add_rouler_fatigue')"
             @click="addRoulerFatigueCard"
         >
-            {{ $t('add_rouler_fatigue') }}
-        </button>
+            <div class="flex flex-col">
+                <div class="text-4xl">+</div>
+                <div class="text-6xl">R</div>
+                <div class="text-3xl">2</div>
+            </div>
+        </CardItem>
     </div>
 </template>

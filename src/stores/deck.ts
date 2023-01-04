@@ -17,6 +17,7 @@ enum CardStatus {
 interface Card {
     status: CardStatus
     value: number
+    isFatigue: boolean
 }
 
 interface AppState {
@@ -33,21 +34,21 @@ interface AppState {
 
 function generateRoulerDeck() {
     const deck: Card[] = [
-        { status: CardStatus.AVAILABLE, value: 3 },
-        { status: CardStatus.AVAILABLE, value: 3 },
-        { status: CardStatus.AVAILABLE, value: 3 },
-        { status: CardStatus.AVAILABLE, value: 4 },
-        { status: CardStatus.AVAILABLE, value: 4 },
-        { status: CardStatus.AVAILABLE, value: 4 },
-        { status: CardStatus.AVAILABLE, value: 5 },
-        { status: CardStatus.AVAILABLE, value: 5 },
-        { status: CardStatus.AVAILABLE, value: 5 },
-        { status: CardStatus.AVAILABLE, value: 6 },
-        { status: CardStatus.AVAILABLE, value: 6 },
-        { status: CardStatus.AVAILABLE, value: 6 },
-        { status: CardStatus.AVAILABLE, value: 7 },
-        { status: CardStatus.AVAILABLE, value: 7 },
-        { status: CardStatus.AVAILABLE, value: 7 },
+        { status: CardStatus.AVAILABLE, value: 3, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 3, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 3, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 4, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 4, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 4, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 5, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 5, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 5, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 6, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 6, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 6, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 7, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 7, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 7, isFatigue: false },
     ]
     shuffleDeck(deck)
     return deck
@@ -55,21 +56,21 @@ function generateRoulerDeck() {
 
 function generateSprinterDeck() {
     const deck: Card[] = [
-        { status: CardStatus.AVAILABLE, value: 2 },
-        { status: CardStatus.AVAILABLE, value: 2 },
-        { status: CardStatus.AVAILABLE, value: 2 },
-        { status: CardStatus.AVAILABLE, value: 3 },
-        { status: CardStatus.AVAILABLE, value: 3 },
-        { status: CardStatus.AVAILABLE, value: 3 },
-        { status: CardStatus.AVAILABLE, value: 4 },
-        { status: CardStatus.AVAILABLE, value: 4 },
-        { status: CardStatus.AVAILABLE, value: 4 },
-        { status: CardStatus.AVAILABLE, value: 5 },
-        { status: CardStatus.AVAILABLE, value: 5 },
-        { status: CardStatus.AVAILABLE, value: 5 },
-        { status: CardStatus.AVAILABLE, value: 9 },
-        { status: CardStatus.AVAILABLE, value: 9 },
-        { status: CardStatus.AVAILABLE, value: 9 },
+        { status: CardStatus.AVAILABLE, value: 2, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 2, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 2, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 3, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 3, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 3, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 4, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 4, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 4, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 5, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 5, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 5, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 9, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 9, isFatigue: false },
+        { status: CardStatus.AVAILABLE, value: 9, isFatigue: false },
     ]
     shuffleDeck(deck)
     return deck
@@ -118,8 +119,16 @@ export const useDeckStore = defineStore('deck', () => {
             !(state.roulerStatus === RiderStatus.FINISHED && state.sprinterStatus === RiderStatus.FINISHED)
     )
 
-    const prevStates: AppState[] = reactive([])
-    const isStateSaved = computed(() => prevStates.length > 0)
+    const isFirstStep = computed(
+        () =>
+            state.currentRound === 1 &&
+            state.roulerStatus === RiderStatus.READY &&
+            state.sprinterStatus === RiderStatus.READY
+    )
+
+    const prevStates: AppState[] = []
+    //const prevStates: AppState[] = reactive([])
+    //const isStateSaved = computed(() => prevStates.length > 0)
 
     function saveState() {
         prevStates.push(structuredClone(toRaw(state)))
@@ -218,13 +227,13 @@ export const useDeckStore = defineStore('deck', () => {
 
     function addRoulerFatigueCard() {
         saveState()
-        state.roulerDeck.push({ value: 2, status: CardStatus.USED })
+        state.roulerDeck.push({ value: 2, status: CardStatus.USED, isFatigue: true })
         state.roulerFatigueAdded = true
     }
 
     function addSprinterFatigueCard() {
         saveState()
-        state.sprinterDeck.push({ value: 2, status: CardStatus.USED })
+        state.sprinterDeck.push({ value: 2, status: CardStatus.USED, isFatigue: true })
         state.sprinterFatigueAdded = true
     }
 
@@ -251,8 +260,8 @@ export const useDeckStore = defineStore('deck', () => {
         showFinishedRound,
         showRiderSelector,
         state,
-        isStateSaved,
         prevStates,
+        isFirstStep,
         drawRouler,
         drawSprinter,
         selectRouler,
