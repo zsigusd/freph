@@ -11,7 +11,7 @@ const { addRoulerFatigueCard, addSprinterFatigueCard } = store
 </script>
 
 <template>
-    <div class="my-5 flex w-80 items-center justify-around align-middle">
+    <div class="flex w-80 items-center justify-around align-middle">
         <CardItem
             :disabled="state.sprinterFatigueAdded"
             class="bg-red-600 hover:bg-red-700 hover:disabled:bg-red-600"
@@ -21,7 +21,7 @@ const { addRoulerFatigueCard, addSprinterFatigueCard } = store
             <div class="flex flex-col">
                 <div class="text-4xl">+</div>
                 <div class="text-6xl">S</div>
-                <div class="text-3xl">2</div>
+                <div class="text-4xl">2</div>
             </div>
         </CardItem>
 
@@ -34,7 +34,7 @@ const { addRoulerFatigueCard, addSprinterFatigueCard } = store
             <div class="flex flex-col">
                 <div class="text-4xl">+</div>
                 <div class="text-6xl">R</div>
-                <div class="text-3xl">2</div>
+                <div class="text-4xl">2</div>
             </div>
         </CardItem>
     </div>

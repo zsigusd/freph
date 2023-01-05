@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CardItem from '@/components/CardItem.vue'
+import TitleText from '@/components/TitleText.vue'
 import { useDeckStore } from '@/stores/deck'
 import { storeToRefs } from 'pinia'
 
@@ -11,7 +12,7 @@ const { selectRouler } = store
 </script>
 
 <template>
-    <div class="my-5 text-2xl">{{ $t('select_card_for_rouler') }}</div>
+    <TitleText>{{ $t('select_card_for_rouler') }}</TitleText>
     <div class="flex w-80 flex-wrap items-center justify-around align-middle">
         <CardItem
             v-for="(card, i) in drawnRoulers"
