@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import RiderSelector from '@/components/RiderSelector.vue'
+import TitleText from '@/components/TitleText.vue'
 </script>
 
 <template>
-    <div class="my-5 text-2xl">{{ $t('choose_rider') }}</div>
+    <TitleText>{{ $t('choose_rider') }}</TitleText>
     <RiderSelector />
 </template>

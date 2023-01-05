@@ -30,8 +30,10 @@ const currentPage = computed(() => {
 </script>
 
 <template>
-    <div class="flex items-center justify-center">
-        <div class="flex max-w-2xl flex-col items-center justify-center">
+    <div class="flex h-screen items-center justify-center bg-[url('/background.gif')]">
+        <div
+            class="flex min-h-160 max-w-2xl flex-col items-center justify-between rounded-xl border-8 border-red-900 bg-[url('/texture.jpg')] shadow-lg"
+        >
             <component :is="currentPage"></component>
 
             <RoundStatus />
