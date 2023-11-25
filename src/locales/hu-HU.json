@@ -1,11 +1,12 @@
 {
-    "current_round": "Jelenlegi kör",
-    "choose_rider": "Válassz versenyzöt",
-    "select_card_for_rouler": "Válassz kártyát a Rouleurnek",
-    "select_card_for_sprinter": "Válassz kártyát a Sprinteurnek",
-    "second_third_phase": "Mozgás és Lezárás fázis",
-    "add_rouler_fatigue": "Rouleur fáradtságkártya hozzáadása",
-    "add_sprinter_fatigue": "Sprinteur fáradtságkártya hozzáadása",
-    "finish_round": "Következö kör",
-    "back": "Vissza"
+  "current_round": "Jelenlegi kör",
+  "choose_rider": "Válassz versenyzöt",
+  "select_card_for_rouler": "Válassz kártyát a Rouleurnek",
+  "select_card_for_sprinter": "Válassz kártyát a Sprinteurnek",
+  "dismissed_cards": "Eldobott kártyák",
+  "second_third_phase": "Mozgás és Lezárás fázis",
+  "add_rouler_fatigue": "Rouleur fáradtságkártya hozzáadása",
+  "add_sprinter_fatigue": "Sprinteur fáradtságkártya hozzáadása",
+  "finish_round": "Következö kör",
+  "back": "Vissza"
 }

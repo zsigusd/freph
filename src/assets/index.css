@@ -3,6 +3,14 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'Verve';
-    src: local('Verve'), url(../fonts/verve.ttf) format('truetype');
+  font-family: 'Verve';
+  src:
+    local('Verve'),
+    url(../fonts/verve.ttf) format('truetype');
+}
+
+@layer base {
+  html {
+    @apply text-green-500;
+  }
 }
