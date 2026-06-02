@@ -6,6 +6,7 @@
     "composite": true,
     "paths": {
       "@components/*": ["./src/components/*"],
+      "@composables/*": ["./src/composables/*"],
       "@stores/*": ["./src/stores/*"]
     }
   }
