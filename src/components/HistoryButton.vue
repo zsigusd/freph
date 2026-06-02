@@ -22,7 +22,7 @@ const dialog = ref<HTMLDialogElement>()
     <HistoryIcon />
   </button>
   <dialog ref="dialog" class="modal">
-    <div class="modal-box relative w-fit max-w-18 border-4 border-red-900 bg-[url('/texture.jpg')] p-4">
+    <div class="modal-box relative w-fit max-w-[312px] border-4 border-red-900 bg-[url('/texture.jpg')] p-4 mx-2">
       <TitleText class="w-full pt-0">{{ $t('dismissed_cards') }}</TitleText>
       <div class="flex flex-wrap justify-center pt-4">
         <SmallCardItem v-for="(card, i) in cards" :key="i" :class="cardColor" :disabled="true">

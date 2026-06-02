@@ -5,6 +5,7 @@
     url("../fonts/verve.ttf") format("truetype");
 }
 
+/* biome-ignore lint/correctness/noInvalidPositionAtImportRule: Tailwind requires its @import after the @font-face declaration */
 @import "tailwindcss";
 @plugin "daisyui";
 

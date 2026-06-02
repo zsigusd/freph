@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
 import TitleText from '@components/title/TitleText.vue'
 import { Phase, useDeckStore } from '@stores/deck'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
 const store = useDeckStore()
 
