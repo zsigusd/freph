@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, reactive, toRaw } from 'vue'
+import { computed, reactive, ref, toRaw } from 'vue'
 
 export enum RiderStatus {
   READY = 0,
@@ -65,6 +65,8 @@ function sortCardsByValue(c1: Card, c2: Card) {
 }
 
 export const useDeckStore = defineStore('deck', () => {
+  const reshuffleTrigger = ref(0)
+
   const state: AppState = reactive({
     roulerDeck: generateDeck(ROULER_VALUES),
     sprinterDeck: generateDeck(SPRINTER_VALUES),
@@ -100,6 +102,7 @@ export const useDeckStore = defineStore('deck', () => {
         })
 
         shuffleDeck(getDeck())
+        reshuffleTrigger.value++
         takeAvailable(CARDS_PER_DRAW - drawn.value.length)
       }
     }
@@ -240,6 +243,7 @@ export const useDeckStore = defineStore('deck', () => {
     sortedUsedRoulers,
     sortedUsedSprinters,
     state,
+    reshuffleTrigger,
     isFirstStep,
     currentPhase,
     drawRouler,
