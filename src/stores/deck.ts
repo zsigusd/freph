@@ -65,8 +65,6 @@ function sortCardsByValue(c1: Card, c2: Card) {
 }
 
 export const useDeckStore = defineStore('deck', () => {
-  const reshuffleTrigger = ref(0)
-
   const state: AppState = reactive({
     roulerDeck: generateDeck(ROULER_VALUES),
     sprinterDeck: generateDeck(SPRINTER_VALUES),
@@ -80,6 +78,7 @@ export const useDeckStore = defineStore('deck', () => {
   })
 
   function createRider(getDeck: () => Card[]) {
+    const reshuffledOnLastDraw = ref(false)
     const available = computed(() => getDeck().filter((c) => c.status === CardStatus.AVAILABLE))
     const used = computed(() => getDeck().filter((c) => c.status === CardStatus.USED))
     const drawn = computed(() => getDeck().filter((c) => c.status === CardStatus.DRAWN))
@@ -94,6 +93,7 @@ export const useDeckStore = defineStore('deck', () => {
     }
 
     function draw() {
+      reshuffledOnLastDraw.value = false
       takeAvailable(CARDS_PER_DRAW)
 
       if (drawn.value.length < CARDS_PER_DRAW) {
@@ -102,7 +102,7 @@ export const useDeckStore = defineStore('deck', () => {
         })
 
         shuffleDeck(getDeck())
-        reshuffleTrigger.value++
+        reshuffledOnLastDraw.value = true
         takeAvailable(CARDS_PER_DRAW - drawn.value.length)
       }
     }
@@ -118,7 +118,7 @@ export const useDeckStore = defineStore('deck', () => {
       getDeck().push({ value: 2, status: CardStatus.USED, isFatigue: true })
     }
 
-    return { available, used, drawn, sortedUsed, draw, select, addFatigueCard }
+    return { available, used, drawn, sortedUsed, reshuffledOnLastDraw, draw, select, addFatigueCard }
   }
 
   const rouler = createRider(() => state.roulerDeck)
@@ -127,10 +127,12 @@ export const useDeckStore = defineStore('deck', () => {
   const usedRoulers = rouler.used
   const drawnRoulers = rouler.drawn
   const sortedUsedRoulers = rouler.sortedUsed
+  const roulerReshuffledOnLastDraw = rouler.reshuffledOnLastDraw
 
   const usedSprinters = sprinter.used
   const drawnSprinters = sprinter.drawn
   const sortedUsedSprinters = sprinter.sortedUsed
+  const sprinterReshuffledOnLastDraw = sprinter.reshuffledOnLastDraw
 
   const showFinishedRound = computed(
     () => state.roulerStatus === RiderStatus.FINISHED && state.sprinterStatus === RiderStatus.FINISHED
@@ -243,7 +245,8 @@ export const useDeckStore = defineStore('deck', () => {
     sortedUsedRoulers,
     sortedUsedSprinters,
     state,
-    reshuffleTrigger,
+    roulerReshuffledOnLastDraw,
+    sprinterReshuffledOnLastDraw,
     isFirstStep,
     currentPhase,
     drawRouler,

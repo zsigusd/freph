@@ -19,6 +19,8 @@ export default defineConfig({
       // fallow-ignore-next-line unresolved-import
       '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
       // fallow-ignore-next-line unresolved-import
+      '@composables': fileURLToPath(new URL('./src/composables', import.meta.url)),
+      // fallow-ignore-next-line unresolved-import
       '@stores': fileURLToPath(new URL('./src/stores', import.meta.url)),
     },
   },

@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import CardItem from '@components/CardItem.vue'
+import ShuffleOverlay from '@components/ShuffleOverlay.vue'
+import { useShuffleOverlay } from '@composables/useShuffleOverlay'
 import { useDeckStore } from '@stores/deck'
 import { storeToRefs } from 'pinia'
 
 const store = useDeckStore()
 
-const { drawnSprinters } = storeToRefs(store)
+const { drawnSprinters, sprinterReshuffledOnLastDraw } = storeToRefs(store)
 
 const { selectSprinter } = store
+
+const { isShuffling } = useShuffleOverlay(sprinterReshuffledOnLastDraw)
 </script>
 
 <template>
-  <div class="flex w-80 flex-wrap items-center justify-around align-middle">
+  <div class="relative flex w-80 flex-wrap items-center justify-around align-middle">
     <CardItem
       v-for="(card, i) in drawnSprinters"
       :key="i"
@@ -22,5 +26,7 @@ const { selectSprinter } = store
         {{ card.value }}
       </div>
     </CardItem>
+
+    <ShuffleOverlay v-if="isShuffling" />
   </div>
 </template>

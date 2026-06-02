@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute inset-0 z-50 flex items-center justify-center rounded-lg bg-black/55 backdrop-blur-sm">
+  <div class="absolute inset-0 z-50 flex items-center justify-center rounded-[inherit] bg-black/55 backdrop-blur-sm">
     <div class="relative h-40 w-28">
       <div class="shuffle-card shuffle-card-left"></div>
       <div class="shuffle-card shuffle-card-mid"></div>
@@ -26,15 +26,15 @@
 }
 
 .shuffle-card-left {
-  animation: shuffle-left 0.45s ease-in-out infinite;
+  animation: shuffle-left 0.4s ease-in-out infinite;
 }
 
 .shuffle-card-mid {
-  animation: shuffle-mid 0.45s ease-in-out infinite;
+  animation: shuffle-mid 0.4s ease-in-out infinite;
 }
 
 .shuffle-card-right {
-  animation: shuffle-right 0.45s ease-in-out infinite;
+  animation: shuffle-right 0.4s ease-in-out infinite;
 }
 
 @keyframes shuffle-left {

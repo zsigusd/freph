@@ -161,6 +161,77 @@ describe('deck store', () => {
     })
   })
 
+  describe('reshuffle flag', () => {
+    it('starts false for both decks', () => {
+      const store = useDeckStore()
+
+      expect(store.roulerReshuffledOnLastDraw).toBe(false)
+      expect(store.sprinterReshuffledOnLastDraw).toBe(false)
+    })
+
+    it('stays false on a normal draw that has enough available cards', () => {
+      const store = useDeckStore()
+
+      store.drawRouler()
+
+      expect(store.roulerReshuffledOnLastDraw).toBe(false)
+    })
+
+    it('sets only the rouler flag when the rouler deck is reshuffled', () => {
+      const store = useDeckStore()
+
+      // Three full rounds consume the 15 available cards without a reshuffle.
+      for (let round = 0; round < 3; round++) {
+        store.drawRouler()
+        store.selectRouler(store.drawnRoulers[0])
+        store.finishRound()
+      }
+      expect(store.roulerReshuffledOnLastDraw).toBe(false)
+
+      // The fourth draw runs out of available cards and forces a reshuffle.
+      store.drawRouler()
+
+      expect(store.roulerReshuffledOnLastDraw).toBe(true)
+      expect(store.sprinterReshuffledOnLastDraw).toBe(false)
+      expect(store.drawnRoulers).toHaveLength(CARDS_PER_DRAW)
+    })
+
+    it('sets only the sprinter flag when the sprinter deck is reshuffled', () => {
+      const store = useDeckStore()
+
+      for (let round = 0; round < 3; round++) {
+        store.drawSprinter()
+        store.selectSprinter(store.drawnSprinters[0])
+        store.finishRound()
+      }
+      expect(store.sprinterReshuffledOnLastDraw).toBe(false)
+
+      store.drawSprinter()
+
+      expect(store.sprinterReshuffledOnLastDraw).toBe(true)
+      expect(store.roulerReshuffledOnLastDraw).toBe(false)
+      expect(store.drawnSprinters).toHaveLength(CARDS_PER_DRAW)
+    })
+
+    it('resets the flag to false on the next non-reshuffling draw', () => {
+      const store = useDeckStore()
+
+      for (let round = 0; round < 3; round++) {
+        store.drawRouler()
+        store.selectRouler(store.drawnRoulers[0])
+        store.finishRound()
+      }
+      store.drawRouler()
+      expect(store.roulerReshuffledOnLastDraw).toBe(true)
+
+      store.selectRouler(store.drawnRoulers[0])
+      store.finishRound()
+      store.drawRouler()
+
+      expect(store.roulerReshuffledOnLastDraw).toBe(false)
+    })
+  })
+
   describe('undo (toPreviousState)', () => {
     it('restores the state captured before the last action', () => {
       const store = useDeckStore()
