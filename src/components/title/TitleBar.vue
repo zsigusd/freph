@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import TitleText from '@/components/title/TitleText.vue'
-import { Phase, useDeckStore } from '@/stores/deck'
+import TitleText from '@components/title/TitleText.vue'
+import { Phase, useDeckStore } from '@stores/deck'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
@@ -8,6 +8,7 @@ const store = useDeckStore()
 
 const { currentPhase } = storeToRefs(store)
 
+// fallow-ignore-next-line complexity
 const text = computed(() => {
   switch (currentPhase.value) {
     case Phase.CHOOSE_RIDER:

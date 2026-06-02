@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CardItem from '@/components/CardItem.vue'
-import { useDeckStore } from '@/stores/deck'
+import CardItem from '@components/CardItem.vue'
+import { useDeckStore } from '@stores/deck'
 import { storeToRefs } from 'pinia'
 
 const store = useDeckStore()
