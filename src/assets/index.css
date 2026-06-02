@@ -1,12 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @font-face {
-  font-family: 'Verve';
+  font-family: "Verve";
   src:
-    local('Verve'),
-    url(../fonts/verve.ttf) format('truetype');
+    local("Verve"),
+    url("../fonts/verve.ttf") format("truetype");
+}
+
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+  --font-verve: "Verve";
+  --font-sans: "Verve", ui-sans-serif, system-ui, sans-serif;
+  --color-brown: #5d5145;
+  --spacing-160: 40rem;
+  --width-18: 18rem;
 }
 
 @layer base {

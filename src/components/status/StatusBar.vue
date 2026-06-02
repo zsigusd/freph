@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import ArrowIcon from '@/components/status/ArrowIcon.vue'
-import StatusButton from '@/components/status/StatusButton.vue'
-import { Phase, useDeckStore } from '@/stores/deck'
+import ArrowIcon from '@components/status/ArrowIcon.vue'
+import StatusButton from '@components/status/StatusButton.vue'
+import { Phase, useDeckStore } from '@stores/deck'
 import { storeToRefs } from 'pinia'
 
 const store = useDeckStore()

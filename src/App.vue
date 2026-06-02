@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import FinishRound from '@/components/FinishRound.vue'
-import RiderSelector from '@/components/RiderSelector.vue'
-import RoulerCardSelector from '@/components/RoulerCardSelector.vue'
-import SprinterCardSelector from '@/components/SprinterCardSelector.vue'
-import StatusBar from '@/components/status/StatusBar.vue'
-import TitleBar from '@/components/title/TitleBar.vue'
-import { Phase, useDeckStore } from '@/stores/deck'
+import FinishRound from '@components/FinishRound.vue'
+import RiderSelector from '@components/RiderSelector.vue'
+import RoulerCardSelector from '@components/RoulerCardSelector.vue'
+import SprinterCardSelector from '@components/SprinterCardSelector.vue'
+import StatusBar from '@components/status/StatusBar.vue'
+import TitleBar from '@components/title/TitleBar.vue'
+import { Phase, useDeckStore } from '@stores/deck'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
@@ -13,6 +13,7 @@ const store = useDeckStore()
 
 const { currentPhase } = storeToRefs(store)
 
+// fallow-ignore-next-line complexity
 const currentPage = computed(() => {
   switch (currentPhase.value) {
     case Phase.CHOOSE_RIDER:

@@ -2,23 +2,23 @@ import { defineStore } from 'pinia'
 import { computed, reactive, toRaw } from 'vue'
 
 export enum RiderStatus {
-  READY,
-  DRAWN,
-  FINISHED,
+  READY = 0,
+  DRAWN = 1,
+  FINISHED = 2,
 }
 
 export enum Phase {
-  CHOOSE_RIDER,
-  ROULEUR_SELECTOR,
-  SPRINTEUR_SELECTOR,
-  FINISH_ROUND,
+  CHOOSE_RIDER = 0,
+  ROULEUR_SELECTOR = 1,
+  SPRINTEUR_SELECTOR = 2,
+  FINISH_ROUND = 3,
 }
 
 enum CardStatus {
-  AVAILABLE,
-  USED,
-  DRAWN,
-  PLAYED,
+  AVAILABLE = 0,
+  USED = 1,
+  DRAWN = 2,
+  PLAYED = 3,
 }
 
 export interface Card {
@@ -39,52 +39,19 @@ interface AppState {
   currentRound: number
 }
 
-function generateRoulerDeck() {
-  const deck: Card[] = [
-    { status: CardStatus.AVAILABLE, value: 3, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 3, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 3, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 4, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 4, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 4, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 5, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 5, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 5, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 6, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 6, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 6, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 7, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 7, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 7, isFatigue: false },
-  ]
-  shuffleDeck(deck)
-  return deck
-}
+const ROULER_VALUES = [3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7]
+const SPRINTER_VALUES = [2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 9, 9, 9]
 
-function generateSprinterDeck() {
-  const deck: Card[] = [
-    { status: CardStatus.AVAILABLE, value: 2, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 2, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 2, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 3, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 3, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 3, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 4, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 4, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 4, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 5, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 5, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 5, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 9, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 9, isFatigue: false },
-    { status: CardStatus.AVAILABLE, value: 9, isFatigue: false },
-  ]
+const CARDS_PER_DRAW = 4
+
+function generateDeck(values: number[]) {
+  const deck: Card[] = values.map((value) => ({ status: CardStatus.AVAILABLE, value, isFatigue: false }))
   shuffleDeck(deck)
   return deck
 }
 
 // Fisher-Yates
-function shuffleDeck(deck: any[]) {
+function shuffleDeck(deck: Card[]) {
   for (let i = deck.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     const temp = deck[i]
@@ -99,8 +66,8 @@ function sortCardsByValue(c1: Card, c2: Card) {
 
 export const useDeckStore = defineStore('deck', () => {
   const state: AppState = reactive({
-    roulerDeck: generateRoulerDeck(),
-    sprinterDeck: generateSprinterDeck(),
+    roulerDeck: generateDeck(ROULER_VALUES),
+    sprinterDeck: generateDeck(SPRINTER_VALUES),
     roulerStatus: RiderStatus.READY,
     sprinterStatus: RiderStatus.READY,
     roulerFatigueAdded: false,
@@ -110,15 +77,57 @@ export const useDeckStore = defineStore('deck', () => {
     currentRound: 1,
   })
 
-  const availableRoulers = computed(() => state.roulerDeck.filter((r) => r.status === CardStatus.AVAILABLE))
-  const usedRoulers = computed(() => state.roulerDeck.filter((r) => r.status === CardStatus.USED))
-  const drawnRoulers = computed(() => state.roulerDeck.filter((r) => r.status === CardStatus.DRAWN))
-  const sortedUsedRoulers = computed(() => [...usedRoulers.value].sort(sortCardsByValue))
+  function createRider(getDeck: () => Card[]) {
+    const available = computed(() => getDeck().filter((c) => c.status === CardStatus.AVAILABLE))
+    const used = computed(() => getDeck().filter((c) => c.status === CardStatus.USED))
+    const drawn = computed(() => getDeck().filter((c) => c.status === CardStatus.DRAWN))
+    const sortedUsed = computed(() => [...used.value].sort(sortCardsByValue))
 
-  const availableSprinters = computed(() => state.sprinterDeck.filter((r) => r.status === CardStatus.AVAILABLE))
-  const usedSprinters = computed(() => state.sprinterDeck.filter((r) => r.status === CardStatus.USED))
-  const drawnSprinters = computed(() => state.sprinterDeck.filter((r) => r.status === CardStatus.DRAWN))
-  const sortedUsedSprinters = computed(() => [...usedSprinters.value].sort(sortCardsByValue))
+    function takeAvailable(count: number) {
+      available.value
+        .filter((_c, index) => index < count)
+        .forEach((c) => {
+          c.status = CardStatus.DRAWN
+        })
+    }
+
+    function draw() {
+      takeAvailable(CARDS_PER_DRAW)
+
+      if (drawn.value.length < CARDS_PER_DRAW) {
+        used.value.forEach((c) => {
+          c.status = CardStatus.AVAILABLE
+        })
+
+        shuffleDeck(getDeck())
+        takeAvailable(CARDS_PER_DRAW - drawn.value.length)
+      }
+    }
+
+    function select(card: Card) {
+      card.status = CardStatus.PLAYED
+      for (const c of drawn.value) {
+        c.status = CardStatus.USED
+      }
+    }
+
+    function addFatigueCard() {
+      getDeck().push({ value: 2, status: CardStatus.USED, isFatigue: true })
+    }
+
+    return { available, used, drawn, sortedUsed, draw, select, addFatigueCard }
+  }
+
+  const rouler = createRider(() => state.roulerDeck)
+  const sprinter = createRider(() => state.sprinterDeck)
+
+  const usedRoulers = rouler.used
+  const drawnRoulers = rouler.drawn
+  const sortedUsedRoulers = rouler.sortedUsed
+
+  const usedSprinters = sprinter.used
+  const drawnSprinters = sprinter.drawn
+  const sortedUsedSprinters = sprinter.sortedUsed
 
   const showFinishedRound = computed(
     () => state.roulerStatus === RiderStatus.FINISHED && state.sprinterStatus === RiderStatus.FINISHED
@@ -135,6 +144,7 @@ export const useDeckStore = defineStore('deck', () => {
       state.currentRound === 1 && state.roulerStatus === RiderStatus.READY && state.sprinterStatus === RiderStatus.READY
   )
 
+  // fallow-ignore-next-line complexity
   const currentPhase = computed(() => {
     if (showRiderSelector.value) {
       return Phase.CHOOSE_RIDER
@@ -175,89 +185,39 @@ export const useDeckStore = defineStore('deck', () => {
 
   function drawRouler() {
     saveState()
-
-    availableRoulers.value
-      .filter((i, index) => index < 4)
-      .forEach((c) => {
-        c.status = CardStatus.DRAWN
-      })
-
-    if (drawnRoulers.value.length < 4) {
-      usedRoulers.value.forEach((c) => {
-        c.status = CardStatus.AVAILABLE
-      })
-
-      shuffleDeck(state.roulerDeck)
-
-      const noCardsNeeded = 4 - drawnRoulers.value.length
-      availableRoulers.value
-        .filter((i, index) => index < noCardsNeeded)
-        .forEach((c) => {
-          c.status = CardStatus.DRAWN
-        })
-    }
-
+    rouler.draw()
     state.roulerStatus = RiderStatus.DRAWN
   }
 
   function drawSprinter() {
     saveState()
-
-    availableSprinters.value
-      .filter((i, index) => index < 4)
-      .forEach((c) => {
-        c.status = CardStatus.DRAWN
-      })
-
-    if (drawnSprinters.value.length < 4) {
-      usedSprinters.value.forEach((c) => {
-        c.status = CardStatus.AVAILABLE
-      })
-
-      shuffleDeck(state.sprinterDeck)
-
-      const noCardsNeeded = 4 - drawnSprinters.value.length
-      availableSprinters.value
-        .filter((i, index) => index < noCardsNeeded)
-        .forEach((c) => {
-          c.status = CardStatus.DRAWN
-        })
-    }
-
+    sprinter.draw()
     state.sprinterStatus = RiderStatus.DRAWN
   }
 
   function selectRouler(card: Card) {
     saveState()
-
-    card.status = CardStatus.PLAYED
-    drawnRoulers.value.forEach((c) => {
-      c.status = CardStatus.USED
-    })
+    rouler.select(card)
     state.roulerStatus = RiderStatus.FINISHED
     state.selectedRouler = card.value
   }
 
   function selectSprinter(card: Card) {
     saveState()
-
-    card.status = CardStatus.PLAYED
-    drawnSprinters.value.forEach((c) => {
-      c.status = CardStatus.USED
-    })
+    sprinter.select(card)
     state.sprinterStatus = RiderStatus.FINISHED
     state.selectedSprinter = card.value
   }
 
   function addRoulerFatigueCard() {
     saveState()
-    state.roulerDeck.push({ value: 2, status: CardStatus.USED, isFatigue: true })
+    rouler.addFatigueCard()
     state.roulerFatigueAdded = true
   }
 
   function addSprinterFatigueCard() {
     saveState()
-    state.sprinterDeck.push({ value: 2, status: CardStatus.USED, isFatigue: true })
+    sprinter.addFatigueCard()
     state.sprinterFatigueAdded = true
   }
 

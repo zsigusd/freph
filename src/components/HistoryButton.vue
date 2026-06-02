@@ -1,21 +1,24 @@
 <script setup lang="ts">
-import HistoryIcon from '@/components/HistoryIcon.vue';
-import SmallCardItem from '@/components/SmallCardItem.vue';
-import TitleText from '@/components/title/TitleText.vue';
-import type { Card } from '@/stores/deck';
-import { ref } from 'vue';
+import HistoryIcon from '@components/HistoryIcon.vue'
+import SmallCardItem from '@components/SmallCardItem.vue'
+import TitleText from '@components/title/TitleText.vue'
+import type { Card } from '@stores/deck'
+import { ref } from 'vue'
 
 defineProps<{
   cards: Card[]
   cardColor: string
 }>()
 
-const dialog = ref<HTMLDialogElement>();
+const dialog = ref<HTMLDialogElement>()
 </script>
 <template>
   <button
+    type="button"
     class="cursor-pointer items-center rounded-lg bg-stone-600 p-2.5 text-center text-sm font-medium text-white hover:bg-stone-700 disabled:cursor-not-allowed disabled:opacity-60 hover:disabled:bg-stone-600"
-    :disabled="cards.length === 0" :title="$t('dismissed_cards')" @click="dialog?.showModal()">
+    :disabled="cards.length === 0"
+    :title="$t('dismissed_cards')"
+    @click="dialog?.showModal()">
     <HistoryIcon />
   </button>
   <dialog ref="dialog" class="modal">
@@ -30,7 +33,7 @@ const dialog = ref<HTMLDialogElement>();
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button>close</button>
+      <button type="submit">close</button>
     </form>
   </dialog>
 </template>

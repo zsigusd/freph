@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import CardItem from '@/components/CardItem.vue'
-import { RiderStatus, useDeckStore } from '@/stores/deck'
+import CardItem from '@components/CardItem.vue'
+import HistoryButton from '@components/HistoryButton.vue'
+import { RiderStatus, useDeckStore } from '@stores/deck'
 import { storeToRefs } from 'pinia'
-import HistoryButton from './HistoryButton.vue'
 
 const store = useDeckStore()
 
